@@ -8,41 +8,6 @@ import itertools
 
 #=========================================== Uninformed Search ===========================================
 
-# def bfs(start, goals, rows, cols, obstacles):
-#     queue = deque([(start, [start], [])])  # (current position, path, moves)
-#     visited = set()
-#     nodes_explored = 0
-#     nodes_explored_list = []
-
-#     while queue:
-#         (x, y), path, moves = queue.popleft()
-#         if (x, y) in visited:
-#             continue
-#         visited.add((x, y))
-#         nodes_explored += 1
-#         nodes_explored_list.append((x,y))
-
-#         #print(f"Expanded Node BFS: ({x}, {y})")  # <-- This prints each expanded node
-
-#         if (x, y) in goals:
-#             return (x, y), nodes_explored, moves, nodes_explored_list
-
-#         # Explore neighbors: Up, Left, Down, Right
-#         # FIFO
-#         directions = [(x, y-1, 'up'), (x-1, y, 'left'), (x, y+1, 'down'), (x+1, y, 'right')]
-#         for mx, my, move in directions:
-#             next_pos = (mx, my)
-#             if (
-#                 0 <= mx < cols and 
-#                 0 <= my < rows and 
-#                 next_pos not in obstacles and 
-#                 next_pos not in visited
-#             ):
-#                 queue.append(((mx, my), path + [next_pos], moves + [move]))
-
-#     return None, nodes_explored, [], nodes_explored_list
-
-
 def bfs(start, goals, rows, cols, obstacles):
     queue = deque([(start, [start], [])])  # (current position, path, moves)
     visited = set()
@@ -74,8 +39,6 @@ def bfs(start, goals, rows, cols, obstacles):
                 queue.append(((mx, my), path + [next_pos], moves + [move]))
 
     return None, nodes_explored, [], nodes_explored_list
-
-
 
 def dfs(start, goals, rows, cols, obstacles):
     """Depth-First Search Algorithm to find a path."""
@@ -118,9 +81,6 @@ def dfs(start, goals, rows, cols, obstacles):
                 stack.append((next_pos, path + [next_pos], moves + [move]))
 
     return None, nodes_explored, [], nodes_explored_list
-
-
-
 
 def bidirectional_bfs(start, goals, rows, cols, obstacles):
     """
@@ -236,9 +196,6 @@ def bidirectional_bfs(start, goals, rows, cols, obstacles):
 
     return None, nodes_explored, [], nodes_explored_list
 
-
-
-
 #=========================================== Informed Search ===========================================
 def gbfs(start, goals, rows, cols, obstacles):
     """Greedy Best-First Search with strict insertion-order tie-breaking and resource tracking."""
@@ -284,7 +241,6 @@ def gbfs(start, goals, rows, cols, obstacles):
 
     # If no path is found
     return None, nodes_explored, [], nodes_explored_list
-
 
 def astar(start, goals, rows, cols, obstacles):
     """
@@ -339,7 +295,6 @@ def astar(start, goals, rows, cols, obstacles):
                     heapq.heappush(queue, (new_f, new_g, new_pos, moves + [move]))
 
     return None, nodes_explored, [], nodes_explored_list
-
 
 def bidirectional_astar(start, goals, rows, cols, obstacles):
 
@@ -449,8 +404,6 @@ def bidirectional_astar(start, goals, rows, cols, obstacles):
 
     return None, nodes_explored, [], nodes_explored_list
 
-
-
 def heuristic(pos, goals):
     """Manhattan distance to the nearest goal."""
     x, y = pos
@@ -470,4 +423,3 @@ def run_with_metrics(search_function, *args, **kwargs):
     print(f"Total Memory Used (Peak): {peak / 1024:.6f} KB ({peak / (1024*1024):.6f} MB)\n")
 
     return goal, nodes_explored, moves, nodes_explored_list
-
