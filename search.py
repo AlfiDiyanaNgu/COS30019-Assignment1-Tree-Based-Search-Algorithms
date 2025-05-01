@@ -9,8 +9,8 @@ CELL_SIZE = 30
 DELAY = 0.05  # change the speed of animation here
 
 def display_grid(file_path, path=None, show=True):
-    """Reads a file to extract grid information and optionally displays the grid."""
     with open(file_path, 'r') as file:
+
         #first line - grid size
         grid_line = file.readline().strip() # strip() = remove whitespace including \n
         grid_dimensions = grid_line.strip('[]').split(',') # remove [] and ,
@@ -46,6 +46,7 @@ def display_grid(file_path, path=None, show=True):
         print(f"Obstacles: {obstacles}")
         print("\nGenerated Grid:")
 
+        # Check current position to display grid
         for row in range(rows):
             row_display = []
             for col in range(cols):
@@ -75,9 +76,11 @@ def draw_grid_with_animation(rows, cols, start, goals, obstacles, path_coords, n
     label = tk.Label(root, text=algorithm_name, font=("Georgia", 25, "bold"), fg="black")
     label.pack(pady=10)
 
+    #Create canvas widget (blank place to draw graphics within a window)
     canvas = tk.Canvas(root, width=cols * CELL_SIZE, height=rows * CELL_SIZE)
     canvas.pack(pady=10)
 
+    # Create 2D list
     rects = [[None for _ in range(cols)] for _ in range(rows)]
 
     # Create grid
@@ -99,20 +102,20 @@ def draw_grid_with_animation(rows, cols, start, goals, obstacles, path_coords, n
             rects[row][col] = rect
 
     def animate():
-        try:
+        try: # handle if user close animation
             # Animate explored nodes
             for idx, (col, row) in enumerate(nodes_explored_list, start=1):
                 if (col, row) != start and (col, row) not in goals:
                     canvas.itemconfig(rects[row][col], fill="blue")
-                    canvas.create_text(
+                    canvas.create_text( # draw order of node
                         col * CELL_SIZE + CELL_SIZE // 2,
                         row * CELL_SIZE + CELL_SIZE // 2,
                         text=str(idx),
                         font=("Helvetica", 10, "bold"),
                         fill="white"
                     )
-                    root.update()
-                    time.sleep(DELAY)
+                    root.update() #refresh GUI to show color
+                    time.sleep(DELAY) # make animation happen slowly
 
             # Animate path if it exists
             if path_coords:
@@ -123,11 +126,11 @@ def draw_grid_with_animation(rows, cols, start, goals, obstacles, path_coords, n
                         time.sleep(DELAY)
             else:
                 print("No path found — skipping path animation.")
-        except tk.TclError:
+        except tk.TclError: #handle when window is closed while animating
             return  # Stop animation if window is closed
 
     root.after(100, animate)
-    root.mainloop()
+    root.mainloop() #handle event loop
 
 def main():
     if len(sys.argv) < 3:
@@ -139,8 +142,9 @@ def main():
 
     try:
         # Load input, but do not display yet
-        start, goals, rows, cols, obstacles = display_grid(input_file, show=False)  # <- new optional param
+        start, goals, rows, cols, obstacles = display_grid(input_file, show=False)  
 
+        #use for argument
         algorithm_functions = {
             "bfs": bfs,
             "dfs": dfs,
@@ -150,6 +154,7 @@ def main():
             "cus2": bidirectional_astar
         }
 
+        #use for display algorithm name at window 
         algorithm_display_names = {
             "bfs": "Breadth-First Search",
             "dfs": "Depth-First Search",
@@ -159,8 +164,8 @@ def main():
             "cus2": "Bidirectional A*"
         }
 
+        # get algorithm name for GUI display
         algorithm_title = algorithm_display_names.get(algorithm, algorithm.upper())
-
 
         if algorithm in algorithm_functions:
             goal, nodes_explored, path, nodes_explored_list = run_with_metrics(algorithm_functions[algorithm], start, goals, rows, cols, obstacles)
@@ -210,8 +215,6 @@ def main():
         print(f"Error: Unable to parse grid dimensions or coordinates. {e}")
     except Exception as e:
         print(f"An error occurred: {e}")
-
-
 
 if __name__ == "__main__":
     main()

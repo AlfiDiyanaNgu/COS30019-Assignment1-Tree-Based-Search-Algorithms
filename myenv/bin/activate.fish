@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/alfi/Desktop/Github/copy/myenv"
+set -gx VIRTUAL_ENV "/Users/alfi/Desktop/Github/COS30019-Assignment1-Tree-Based-Search-Algorithms/myenv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
